@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Box, Container, Typography } from '@mui/material'
 import styles from "./../../admin.module.css";
-import { Book, People } from '@mui/icons-material';
+import { Book, People, Settings } from '@mui/icons-material';
 import Image from 'next/image';
 
 function Sidebar() {
@@ -41,7 +41,7 @@ function Sidebar() {
             Home
         </Typography >
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
-            <Link className={styles.link} href="/admin/dashboard" replace>
+            <Link className={styles.link} href="/admin" replace>
                 Dashboard
             </Link>
         </Box>
@@ -59,6 +59,23 @@ function Sidebar() {
                 <Box display={"flex"} alignItems={"center"}>
                     <People/>
                     <Typography pl={2}>Students</Typography>
+                </Box>
+            </Link>
+            <Link className={styles.link} href="/admin/students" replace>
+                <Box display={"flex"} alignItems={"center"}>
+                    <People/>
+                    <Typography pl={2}>Users</Typography>
+                </Box>
+            </Link>
+        </Box>
+        <Typography pb={1}>
+            Settings
+        </Typography>
+        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Link className={styles.link} href="/admin" replace>
+                <Box display={"flex"} alignItems={"center"}>
+                    <Settings/>
+                    <Typography pl={2}>Settings</Typography>
                 </Box>
             </Link>
         </Box>
