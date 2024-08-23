@@ -1,0 +1,35 @@
+.container {
+    /*  */
+    /* background-color: red; */
+    border-bottom: 1px solid gray;
+}
+
+.header {
+    /* background-color: aqua; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* padding: 10px 0 10px 0; */
+}
+
+.logoBox a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logoBox p, .logoBox h6 {
+    padding: 10px;
+}
+
+.menuList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* color: red; */
+}
+
+.menuList p, .menuList a {
+    padding: 10px;
+}
