@@ -30,6 +30,8 @@ function getDateCode() {
 
 
 function AddNewGuest() {
+
+    const [gCounter, setGCounter] = useState(0)
     // Step change state
     const [step, setStep] = useState(1)
 
@@ -77,16 +79,6 @@ function AddNewGuest() {
         }
     }, [searchStudent])
 
-    useEffect(() => {
-        const getGuestCounter = async (params) => {
-            const data = await getDataById('guest_counters' , dateCode)
-            setGuestCounter(data)
-        }
-
-        // if (updateStatus) {
-            getGuestCounter()
-        // }
-    }, [updateStatus])
 
     // Handle select
     const handleChangeValue = (event) => {
@@ -101,6 +93,7 @@ function AddNewGuest() {
         setName("")
     };
 
+
     // Post data
     const handleAddGuest = async (e) => {
         e.preventDefault();
@@ -108,6 +101,8 @@ function AddNewGuest() {
         setIsLoading(true)
         // Get student Id
         const studentId = students[0]?.id;
+
+        console.log("S ID", studentId)
         // Check if student is already existed
         const check = await getDataByFieldName("guests", studentId, dateCode)
 
@@ -117,18 +112,20 @@ function AddNewGuest() {
             studentId: studentId,
             date: date,
             guestType: guestType,
-            status: "In", 
+            guestStatus: "In", 
+            status: "active",
             dateCode: dateCode,
         }
 
         if (check.length > 0) {
-            const added2 = await updateData('guests', check[0]?.id, {status: "Out", dateCode: "",})
+            const added2 = await updateData('guests', check[0]?.id, {guestStatus: "Out", dateCode: "",})
             if (added2) {
                 setName("")
                 setReason("")
                 setStatus("")
 
                 setUpdateStatus("Out")
+                setGCounter(gCounter - 1)
                 toast.success('Good bye, See you later.', {
                     position: "top-center",
                     autoClose: 5000,
@@ -149,6 +146,7 @@ function AddNewGuest() {
                 setStatus("")
 
                 setUpdateStatus("In")
+                setGCounter(gCounter + 1)
                 toast.success('Welcome to NIE smart library', {
                     position: "top-center",
                     autoClose: 5000,
@@ -161,6 +159,15 @@ function AddNewGuest() {
                     transition: Bounce,
                 });
             }
+        }
+
+        const dataCounter = {
+            // guestIn: increment(1),
+            guestStillIn: gCounter + 1,
+        }
+        const counter =  await updateData("guest_counters", dateCode, dataCounter)
+        if (counter) {
+            console.log("Update Guest still In")
         }
 
         setStep(1)
@@ -177,6 +184,7 @@ function AddNewGuest() {
                 const dataCounter = {
                     guestIn: 0,
                     guestOut: 0,
+                    guestStillIn: 0,
                     date: date,
                 }
                 const counter =  await setData("guest_counters", dateCode, dataCounter)
@@ -189,35 +197,18 @@ function AddNewGuest() {
     }, [])
 
     useEffect(() => {
-        const updateGuestIn = async (params) => {
-            const dataCounter = {
-                guestIn: increment(1),
-                date: date,
+        const getGuestCounter = async (params) => {
+            const data = await getDataById('guest_counters' , dateCode)
+            // setGuestCounter(data)
+            if (data) {
+                setGCounter(data.guestStillIn)
             }
-            const counter =  await updateData("guest_counters", dateCode, dataCounter)
-            if (counter) {
-                console.log("Update Guest In")
-            }
-        }
-        const updateGuestOut = async (params) => {
-            const dataCounter = {
-                guestOut: increment(1),
-                date: date,
-            }
-            const counter =  await updateData("guest_counters", dateCode, dataCounter)
-            if (counter) {
-                console.log("Update Guest Out")
-            }
-            
-        }
-        if (updateStatus == "In") {
-            updateGuestIn()
-        }
-        if (updateStatus == "Out") {
-            updateGuestOut()
         }
 
-    }, [updateStatus])
+        // if (updateStatus) {
+            getGuestCounter()
+        // }
+    }, [])
     
 
     return (
@@ -242,11 +233,12 @@ function AddNewGuest() {
                 <Box sx={{ width: "800px", background: "#fff" }}>
                     <Box pb={6} textAlign={"center"}>
                         <Typography variant='h4'>People in <span style={{color: "blue"}}>NIE smart library</span> now.</Typography>
-                        <Typography variant='h3'>{guestCounter.guestIn - guestCounter.guestOut}/200</Typography>
+                        {/* <Typography variant='h3'>{guestCounter?.guestStillIn? guestCounter?.guestStillIn: 0}/200</Typography> */}
+                        <Typography variant='h3'>{gCounter}/200</Typography>
                     </Box>
                     {step == 1 &&
                         <>
-                        <Typography variant='h4' pb={1}>1. Student Check In/Out</Typography>
+                        <Typography variant='h4' pb={1}>1. Enter your ID:</Typography>
                         <Box 
                             sx={{ 
                                 bgcolor: "#fff", 
@@ -306,6 +298,7 @@ function AddNewGuest() {
                                             // size='small'
                                             value={name}
                                             required
+                                            disabled
                                             onChange={(e) => setName(e.target.value)}
                                         />
                                         </>
@@ -342,7 +335,7 @@ function AddNewGuest() {
                     }
                     {step == 2 &&
                     <>
-                        <Typography variant='h4' pb={1}>2. Reason</Typography>
+                        <Typography variant='h4' pb={1}>2. Check your information:</Typography>
                         <Box 
                             sx={{ 
                                 bgcolor: "#fff", 
@@ -374,7 +367,7 @@ function AddNewGuest() {
                                         />
                                         {selectValue == 1 &&
                                             <>
-                                            <Typography mb={1} variant='h5'>{students[0]?.firstNameKh} {students[0]?.lastNameKh}</Typography>
+                                            {/* <Typography mb={1} variant='h5'>{students[0]?.firstNameKh} {students[0]?.lastNameKh}</Typography> */}
                                             {/* <Typography mb={1} variant='h5'>{students[0]?.firstNameEn} {students[0]?.lastNameEn}</Typography> */}
                                             </>
                                         }
@@ -383,13 +376,12 @@ function AddNewGuest() {
                                         }
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <Typography variant='h4'>Select your reason</Typography>
-                                        <FormGroup>
-                                            <FormControlLabel control={<Checkbox />} label="Reading" />
-                                            <FormControlLabel control={<Checkbox />} label="Researching" />
-                                            <FormControlLabel control={<Checkbox />} label="Study" />
-                                            <FormControlLabel control={<Checkbox />} label="Working" />
-                                        </FormGroup>
+                                        <Typography mb={1} variant='h5'>ឈ្មោះ៖ {students[0]?.userNameKh}</Typography>
+                                        <Typography mb={1} variant='h5'>Name: {students[0]?.userNameEn2}</Typography>
+                                        <Typography mb={1} variant='h5'>ID: {students[0]?.studentId}</Typography>
+                                        <Typography mb={1} variant='h5'>Sex: {students[0]?.sex}</Typography>
+                                        <Typography mb={1} variant='h5'>Class: {students[0]?.class}</Typography>
+                                        <Typography mb={1} variant='h5'>Subject: {students[0]?.subject}</Typography>
                                     </Grid>
                                 </Grid>
                             }
@@ -398,7 +390,15 @@ function AddNewGuest() {
                         </Box>
                         <Box sx={{ bgcolor: "#fff" }} p={2} display={"flex"} justifyContent={"space-between"}>
                             <Button type='button' variant="contained" onClick={() => setStep(1)}>Go Back</Button>
-                            <Button type='button' variant="contained" disabled={isLoading} onClick={handleAddGuest} >Submit</Button>
+                            <Button 
+                                type='button' 
+                                variant="contained" 
+                                disabled={isLoading} onClick={handleAddGuest}
+                                color="info" 
+                            >
+                                {/* {students[0]?.studentStatus == "In"? "Enter" : "Leave"} */}
+                                Submit
+                            </Button>
                         </Box>
                     </>
                     }

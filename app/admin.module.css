@@ -8,3 +8,7 @@
     background-color: aqua;
     border-radius: 5px;
 }
+.link:focus {
+    background-color: aqua;
+    border-radius: 5px;
+}

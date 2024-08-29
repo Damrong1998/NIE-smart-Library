@@ -11,14 +11,14 @@ import Paper from '@mui/material/Paper';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useState } from 'react';
-import { searchStudentFirst, searchStudentNext, } from '@/app/db/function/searchStudent';
+import { searchMediaFirst, searchMediaNext, } from '@/app/db/function/searchMedia';
 import { LoadingButton } from '@mui/lab';
 import { Save } from '@mui/icons-material';
 
 
-export default function ViewStudent() {
+export default function ViewMedia() {
 
-    const [students, setStudents] = useState([])
+    const [posts, setPosts] = useState([])
     const [lastVisibleDoc, setLastVisibleDoc] = useState("")
     const [isLoadingNext, setIsLoadingNext] = useState(false)
     const [isDataExist, setIsDataExist] = useState(false)
@@ -31,16 +31,16 @@ export default function ViewStudent() {
     }, [search])
 
     const getFirst = async (params) => {
-        const {data, lastVisible, isExist} = await searchStudentFirst({search: search})
-        setStudents(data)
+        const {data, lastVisible, isExist} = await searchMediaFirst({search: search})
+        setPosts(data)
         setLastVisibleDoc(lastVisible)
         setIsDataExist(isExist)
     }
 
     const getNext = async (params) => {
         setIsLoadingNext(true)
-        const {data, lastVisible, isExist} = await searchStudentNext({search: search, lastDoc: lastVisibleDoc})
-        setStudents(data)
+        const {data, lastVisible, isExist} = await searchMediaNext({search: search, lastDoc: lastVisibleDoc})
+        setPosts(data)
         setLastVisibleDoc(lastVisible)
         setIsDataExist(isExist)
         setIsLoadingNext(false)
@@ -50,10 +50,10 @@ export default function ViewStudent() {
         <Container variant="xl">
             <Box display={"flex"} justifyContent={"space-between"} pt={5} pb={2}>
                 <Box display={"flex"}>
-                    <Typography variant='h5' mr={2}>All Students</Typography>
+                    <Typography variant='h5' mr={2}>All Media File</Typography>
                     <Link 
                         // href={"/admin/students/new"}
-                        href="https://nie-smart-library.web.app/admin/students/new.html" 
+                        href="https://nie-smart-library.web.app/admin/media/new.html" 
                     >
                         <Button size='small' variant='contained'>Add new</Button>
                     </Link>
@@ -76,20 +76,14 @@ export default function ViewStudent() {
                         <TableHead>
                         <TableRow>
                             <TableCell>Photo</TableCell>
-                            <TableCell>Name&nbsp;(kh)</TableCell>
-                            <TableCell>Name&nbsp;(En)</TableCell>
-                            <TableCell>Student Id</TableCell>
-                            <TableCell>Sex</TableCell>
-                            <TableCell>Subject</TableCell>
-                            <TableCell>Class</TableCell>
-                            {/* <TableCell>Email</TableCell> */}
-                            <TableCell>Phone</TableCell>
+                            <TableCell>Name&nbsp;()</TableCell>
+                            <TableCell>File</TableCell>
                             <TableCell align="right">Action</TableCell>
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {students?.length &&
-                            students.map((row) => (
+                        {posts?.length &&
+                            posts.map((row) => (
                             <TableRow
                                 key={row.name}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -97,18 +91,14 @@ export default function ViewStudent() {
                                 <TableCell align="left">
                                     <img 
                                         style={{width: "60px", height: 'auto'}}
-                                        src={row.imageUrl? row.imageUrl: "/jpg_icon.png"} 
+                                        src={row.url? row.url: "/jpg_icon.png"} 
                                         alt='' 
                                     />
                                 </TableCell>
-                                <TableCell component="th" scope="row">{row.firstNameKh + " " + row.lastNameKh}</TableCell>
-                                <TableCell>{row.lastNameEn + " " + row.firstNameEn}</TableCell>
-                                <TableCell>{row.studentId}</TableCell>
-                                <TableCell>{row.sex}</TableCell>
-                                <TableCell>{row.subject}</TableCell>
-                                <TableCell>{row.class}</TableCell>
-                                {/* <TableCell>{row.email}</TableCell> */}
-                                <TableCell>{row.phone}</TableCell>
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>
+                                    <TextField id="file" label="File" value={row.url}/>
+                                </TableCell>
                                 <TableCell align="right">
                                     <Button type='button' size='small' variant='contained' sx={{marginLeft: 2}} color="success" >View</Button>
                                     <Link href={`/admin/students/edit/${row.id}`}>

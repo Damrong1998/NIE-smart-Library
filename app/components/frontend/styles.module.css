@@ -33,3 +33,10 @@
 .menuList p, .menuList a {
     padding: 10px;
 }
+
+.shortTitle {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

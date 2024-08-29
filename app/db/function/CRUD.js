@@ -1,7 +1,93 @@
 
 import { db } from '../firebase';
-import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore'
+import { addDoc, collection, doc, endBefore, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, startAfter, Timestamp, updateDoc, where } from 'firebase/firestore'
 
+
+const getDataByPagination = async (params) => {
+    // Query the first page of docs
+    const first = query(collection(db, "cities"), orderBy("population"), limit(25));
+    const documentSnapshots = await getDocs(first);
+
+    // Get the last visible document
+    const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+    console.log("last", lastVisible);
+
+    // Construct a new query starting at this document,
+    // get the next 25 cities.
+    const next = query(collection(db, "cities"),
+        orderBy("population"),
+        startAfter(lastVisible),
+        limit(25));
+}
+
+
+// Pagination
+const getFirstPage = async (collection_name) => {
+    // Query the first page of docs
+    const first = query(collection(db, collection_name), orderBy("createdAt"), limit(2));
+    const documentSnapshots = await getDocs(first);
+
+    // Get the last visible document
+    const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+    const firstVisible = documentSnapshots.docs[1];
+    // console.log("last", lastVisible);
+
+    if (documentSnapshots.empty) {
+        console.log('There is no collection name', collection_name);
+        return;
+    } 
+    const data = documentSnapshots.docs.map((doc) => ({...doc.data(), id: doc.id}))
+
+    console.log(data)
+    return { data, lastVisible, firstVisible };
+
+}
+
+const getNextPage = async (collection_name, lastVisibleDoc) => {
+    const next = query(collection(db, collection_name),
+        orderBy("createdAt"),
+        startAfter(lastVisibleDoc),
+        limit(2));
+
+    const documentSnapshots = await getDocs(next);
+    // const Snap = await getCountFromServer(next);
+    // console.log('count: ', Snap.data().count);
+
+    const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+    console.log("last", lastVisible);
+
+    let data = [];
+    if (documentSnapshots.empty) {
+        console.log('No more data');
+        return data;
+    } 
+    data = documentSnapshots.docs.map((doc) => ({...doc.data(), id: doc.id}))
+
+    console.log(data)
+    return {data, lastVisible};
+}
+
+const getPreviousPage = async (collection_name, firstVisibleDoc) => {
+    const next = query(collection(db, collection_name),
+        orderBy("createdAt"),
+        // startAfter(lastVisibleDoc),
+        endBefore(firstVisibleDoc),
+        limit(2));
+
+    const documentSnapshots = await getDocs(next); 
+    const firstVisible = documentSnapshots.docs[documentSnapshots.docs.length-1];
+    const lastVisible = documentSnapshots.docs[1];
+    // console.log("last", lastVisible, firstVisible);
+
+    if (documentSnapshots.empty) {
+        console.log('There is no collection name', collection_name);
+        return;
+    } 
+    const data = documentSnapshots.docs.map((doc) => ({...doc.data(), id: doc.id}))
+
+    console.log(data)
+    return {data, firstVisible, lastVisible};
+}
 
 const getDataByFieldName = async (collection_name, studentId, dateCode ) => {
     const booksRef = collection(db, collection_name)
@@ -89,7 +175,7 @@ const addData = async (collection_name, data) => {
         const docData = {
             ...data,
             createdAt: serverTimestamp(),
-            updatedAt: Timestamp.fromDate(new Date("December 10, 1815")),
+            updatedAt: serverTimestamp(),
         };
         
         const docRef  = await addDoc(collection(db, collection_name), docData);
@@ -123,6 +209,7 @@ const setData = async (collection_name, id, data) => {
     }
 }
 
+// update Data
 const updateData = async (collection_name, id, data) => {
     try {
         const docData = {
@@ -159,4 +246,16 @@ const findId = async (params) => {
     
 }
 
-export { getData, getDataById, addData, setData, updateData, deleteData, getDataByFieldName, isDocExist}
+export { 
+    getData, 
+    getDataById, 
+    addData, 
+    setData, 
+    updateData, 
+    deleteData, 
+    getDataByFieldName, 
+    isDocExist,
+    getFirstPage,
+    getNextPage,
+    getPreviousPage,
+}

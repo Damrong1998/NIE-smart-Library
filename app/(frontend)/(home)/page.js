@@ -5,7 +5,7 @@ import { db } from '../../db/firebase'
 
 import { collection, getDocs } from 'firebase/firestore'
 import { getData } from '../../db/function/CRUD'
-import { searchBooks } from '@/app/db/function/search'
+import { searchBookFirst, searchBookNext, searchBooks } from '@/app/db/function/searchBook'
 import BookCard from '@/app/components/frontend/BookCard'
 import CheckboxList from '@/app/components/CheckboxList'
 import { Search } from '@mui/icons-material'
@@ -14,6 +14,11 @@ import CheckboxList2 from '@/app/components/CheckboxList2'
 function HomePage() {
 
     const [books, setBooks] = useState([])
+
+    const [lastVisibleDoc, setLastVisibleDoc] = useState("")
+    const [isDataLoading, setIsDataLoading] = useState(false)
+    const [isDataExist, setIsDataExist] = useState(true)
+
     // show filter
     const [showFilter, setShowFilter] = useState(false)
 
@@ -22,35 +27,33 @@ function HomePage() {
     const [search, setSearch] = useState("")
     const [floorId, setFloorId] = useState("")
 
+
     useEffect(() => {
-        const fetchBooks = async (params) => {
-            const data = await getData('books')
+        const getFirst = async () => {
+            const {data, lastVisible, isExist, isLoading} = await searchBookFirst({search: search})
+            if (data) {
+                // console.log("data", data)
+                setBooks(data)
+                setLastVisibleDoc(lastVisible)
+                setIsDataExist(isExist)
+                setIsDataLoading(isLoading)
+            }
+        }
+
+        getFirst()
         
-            if (data) {
-                console.log("data", data)
-                setBooks(data)
-            }
+    }, [search])
+
+    const getNext = async () => {
+        const {data, lastVisible, isExist, isLoading} = await searchBookNext({search: search, lastDoc: lastVisibleDoc})
+        if (data) {
+            // console.log("data",[...books, ...data])
+            setBooks([...books, ...data])
+            setLastVisibleDoc(lastVisible)
+            setIsDataExist(isExist)
+            setIsDataLoading(isLoading)
         }
-        fetchBooks()
-    }, [])
-
-    // Search block
-    useEffect(() => {
-
-        const getBooks = async () => {
-            const data = await searchBooks({title: title, code: search, floorId: floorId})
-            if (data) {
-                console.log("data", data)
-                setBooks(data)
-            }
-        }
-
-        // if (search.length > 0 || title.length > 0 || floorId > 0) { 
-            getBooks()
-        // }
-
-
-    }, [search, title, floorId])
+    }
 
    
     return (
@@ -61,12 +64,12 @@ function HomePage() {
                     <Box display={"flex"} justifyContent={"space-between"}>
                         <Button variant='outlined' onClick={()=> setShowFilter(!showFilter)}>Filter</Button>
                         <TextField 
-                            id="title" label="Title" variant="outlined" 
+                            id="search" label="Search" variant="outlined" 
                             fullWidth 
                             size='small'
-                            placeholder='Title...' 
+                            placeholder='Type here...' 
                             sx={{bgcolor: '#fff'}}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) => setSearch(e.target.value)}
                         />
                         <Button variant='contained' sx={{marginLeft: 1}} startIcon={<Search/>}>Search</Button>
                     </Box>
@@ -80,7 +83,7 @@ function HomePage() {
                             <Typography variant='h5'>Filters</Typography>
                         </Box>
                         <Container maxWidth="lg">
-                            <CheckboxList label={"Book Types"} collection={"book_type"}/>
+                            <CheckboxList label={"Book Types"} collection={"book_types"}/>
                             <CheckboxList label={"Categories"} collection={"book_categories"}/>
                             <CheckboxList label={"Years"} collection={"book_years"}/>
                         </Container>
@@ -122,7 +125,17 @@ function HomePage() {
                             </Grid>
 
                             <Box pt={4} pb={2} fullWidth display={"flex"} justifyContent={"center"}>
-                                <Pagination count={10} variant="outlined" shape="rounded" />
+                                {/* <Pagination count={10} variant="outlined" shape="rounded" /> */}
+                                {!isDataExist &&
+                                    <Typography>No more data...</Typography>
+                                }
+                                {isDataLoading ?
+                                    <Typography>Loading...</Typography>
+                                    : isDataExist &&
+                                        <Button type='button' variant='contained' onClick={getNext}>Show More...</Button>
+                                    
+                                }
+                                
                             </Box>
                         </Container>
                     </Box>

@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, Modal, Skeleton } from '@mui/material';
 import BookSingle from './BookSingle';
+import styles from "./styles.module.css"
 
 const styleModal = {
     position: 'absolute',
@@ -60,7 +61,12 @@ export default function BookCard({data, button, loading = false}) {
                     title="green iguana"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography 
+                        gutterBottom 
+                        variant="h5" 
+                        component="div"
+                        className={styles.shortTitle}
+                    >
                         {data.title? data.title : "Untitled"}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">

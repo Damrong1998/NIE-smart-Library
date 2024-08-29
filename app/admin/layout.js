@@ -12,9 +12,9 @@ export const metadata = {
 
 export default function AdminLayout({ children }) {
     return (
-        <html lang="en">
-            <body className={inter.className} >
-                
+        // <html lang="en">
+        //     <body className={inter.className} >
+            <> 
                 <div 
                     style={{
                         marginLeft: "280px",
@@ -41,7 +41,8 @@ export default function AdminLayout({ children }) {
                 >
                     {children}
                 </div>
-            </body>
-        </html>
+            </>
+        //     </body>
+        // </html>
     );
 }

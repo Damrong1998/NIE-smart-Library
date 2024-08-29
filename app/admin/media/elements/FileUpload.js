@@ -5,12 +5,12 @@ import { storage } from '@/app/db/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { addData } from '@/app/db/function/CRUD';
-import { Box, Button, Container, Grid, Tab, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, Tab, TextField, Typography } from '@mui/material';
 import { Bounce, toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 
-function FileUpload() {
+function FileUpload({callBack, acceptFile = "image"}) {
     // 
     const [value, setValue] = React.useState('1');
 
@@ -40,14 +40,15 @@ function FileUpload() {
             }
         } 
 
+        
+
         if (url) {
             createMedia()
         }
     }, [url])
     
 
-    const handleSubmit = () => {
-        console.log("Hello")
+    const handleClick = () => {
         if (file === null) {
             alert("Please select an image");
             return;
@@ -85,10 +86,15 @@ function FileUpload() {
         setIsUploading(false)
     };
 
-    console.log(url)
-  
+    // console.log(url)
+    const getUrl = () => {
+        callBack(url)
+        setFile("")
+        setUrl("")
+    };
+    
     return (  
-        <Container maxWidth="lg" sx={{}}>
+        <Box sx={{ bgcolor: "#fff" }} >
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
@@ -102,40 +108,50 @@ function FileUpload() {
                 theme="light"
                 // transition: Bounce,
             />
-
-            <Typography variant='h5' pb={2} pt={2} >Add New Book</Typography>
-
-            <Box sx={{ bgcolor: "#fff", p: 5, mb: 2}} >
-                {/* <form onSubmit={handleSubmit}> */}
-                    <Box p={4}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Box textAlign={"center"}>
-                                    <Image src={url? url : "/jpg_icon.png"} width={100} height={100} alt='My Image'/>
-                                    <Box>
-                                        {isUploading?
-                                            <Typography>Uploading...</Typography>
-                                            :
-                                            <input
-                                                type='file'
-                                                accept={"image/png,image/jpeg,.pdf"}
-                                                size='small'
-                                                // value={file}
-                                                required
-                                                onChange={(e) => setFile(e.target.files[0])}
-                                            />
-                                        }   
-                                        
-                                    </Box>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        
-                    </Box>
-                    <Button type='button' variant='contained' onClick={handleSubmit}>Upload</Button>
-                {/* </form> */}
+            <Box p={4} pt={2} pb={2} sx={{borderBottom: "1px solid gray"}}>
+                <Typography>Add New {acceptFile == "image"? "Image File" : "Pdf File"}</Typography>
             </Box>
-        </Container>
+            <Box p={4}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Box textAlign={"center"}>
+                            <Image src={url? url : acceptFile == "image"? "/jpg_icon.png" : "/pdf_icon.png"} width={100} height={100} alt='My Image'/>
+                            <Box>
+                                {isUploading?
+                                    <Typography>Uploading...</Typography>
+                                    :
+                                    <input
+                                        type='file'
+                                        accept={acceptFile == "image"? "image/png,image/jpeg": ".pdf"}
+                                        size='small'
+                                        // value={file}
+                                        onChange={(e) => setFile(e.target.files[0])}
+                                    />
+                                }   
+                                <Button 
+                                    ml={1}
+                                    type='button' 
+                                    variant='contained'
+                                    onClick={handleClick}
+                                >
+                                    Upload
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Box>
+
+            <Box p={4} pt={2} pb={2} textAlign={"right"} sx={{borderTop: "1px solid gray"}}>
+                <Button 
+                    type='button'
+                    variant='contained' 
+                    onClick={getUrl}
+                >
+                    Get Url
+                </Button>
+            </Box>
+        </Box>
     )
 }
 

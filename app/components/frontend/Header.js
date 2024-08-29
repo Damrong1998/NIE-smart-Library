@@ -1,13 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 import { Avatar, Box, Container, Link, Typography } from '@mui/material'
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import React from 'react'
-import styles from "./header.module.css"
+import styles from "./styles.module.css"
 import Image from 'next/image'
 
 function Header() {
     return (
         <Box sx={{
-            height: "80px",
+            height: "65px",
             width: "100%"
         }}>
             <Box 
@@ -18,7 +19,7 @@ function Header() {
                     top: 0,
                     zIndex: 9999,
                     width: "100%",
-                    height: "80px",
+                    height: "65px",
                     display: "flex",
                     alignItems: "center"
                 }}
@@ -28,20 +29,28 @@ function Header() {
                         
                         <div className={styles.logoBox}>
                             <Link href="#">
-                                <Image
+                                {/* <Image
                                     src="/NIELogo.png"
                                     width={60}
                                     height={60}
                                     alt="Picture of the author"
+                                /> */}
+                                <img 
+                                    style={{width: "auto", height: '55px'}}
+                                    src="/NIELogo_pinkpink.png"
+                                    alt='' 
                                 />
-                                <Typography variant="h6">NIE Smart Library</Typography>
+                                {/* <Typography variant="h6">NIE Smart Library</Typography> */}
                             </Link>
                         </div>
                         
                         <div className={styles.menuList}>
-                            <Link href="#">Home</Link>
-                            <Link href="/admin/dashboard">Dashboard</Link>
-                            <Link href="/guests/new">Check In/Out</Link>
+                            {/* <Link href="/">Home</Link>
+                            <Link href="/admin">Admin</Link>
+                            <Link href="/guests/new">Check In/Out</Link> */}
+                            <Link href="https://nie-smart-library.web.app">Home</Link>
+                            <Link href="https://nie-smart-library.web.app/admin/dashboard.html">Admin</Link>
+                            <Link href="https://nie-smart-library.web.app/guests/new.html">Check In/Out</Link>
                             <Typography></Typography>
                             <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
                         </div>

@@ -1,5 +1,6 @@
 import { Menu } from '@mui/icons-material'
 import { Avatar, Box, Container, Typography } from '@mui/material'
+import Link from 'next/link'
 import React from 'react'
 
 function Navbar() {
@@ -27,7 +28,10 @@ function Navbar() {
                     justifyContent={"space-between"} 
                 >
                     <Menu/>
-                    <Typography ml={2}>Home</Typography>
+                    <Link href="https://nie-smart-library.web.app" replace>
+                    {/* <Link href={"/"}> */}
+                        <Typography ml={2}>Home</Typography>
+                    </Link>
                 </Box>
                 <Avatar/>
             </Box>

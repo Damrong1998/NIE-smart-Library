@@ -1,9 +1,8 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { addData, getData } from '@/app/db/function/CRUD';
+import { addData, getData, updateData } from '@/app/db/function/CRUD';
 import { Box, Button, Card, Container, Grid, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
-import dynamic from "next/dynamic";
 import BookType from '@/app/components/admin/Elements/BookType';
 import BookCategory from '@/app/components/admin/Elements/BookCategory';
 import BookLanguage from '@/app/components/admin/Elements/BookLanguage';
@@ -26,23 +25,23 @@ const styleModal = {
     // p: 4,
 };
 
-function AddNewBook() {
+function EditFormBook({id, data}) {
     const [isLoading, setIsLoading] = useState(false)
     // Input state
-    const [title, setTitle] = useState("")
-    const [code, setCode] = useState("")
-    const [description, setDescription] = useState("")
+    const [title, setTitle] = useState(data.title)
+    const [code, setCode] = useState(data.code)
+    const [description, setDescription] = useState(data.description)
 
     // File Select
-    const [imageUrl, setImageUrl] = useState("")
-    const [pdfUrl, setPdfUrl] = useState("")
+    const [imageUrl, setImageUrl] = useState(data.imageUrl)
+    const [pdfUrl, setPdfUrl] = useState(data.pdfUrl)
 
     // Select state
-    const [selectType, setSelectType] = useState('');
-    const [selectCategory, setSelectCategory] = useState('');
-    const [selectYear, setSelectYear] = useState('');
-    const [selectLanguage, setSelectLanguage] = useState('');
-    const [selectFloor, setSelectFloor] = useState('');
+    const [selectType, setSelectType] = useState(data.bookTypeId);
+    const [selectCategory, setSelectCategory] = useState(data.categoryId);
+    const [selectYear, setSelectYear] = useState(data.yearId);
+    const [selectLanguage, setSelectLanguage] = useState(data.languageId);
+    const [selectFloor, setSelectFloor] = useState(data.floorId);
 
     // Book Children
     const [types, setTypes] = useState([])
@@ -90,7 +89,7 @@ function AddNewBook() {
     useEffect(() => {
         // Book Type 
         const getBookTypes = async (params) => {
-            const data = await getData('book_type')
+            const data = await getData('book_types')
             setTypes(data)
         }
         const getCategories = async (params) => {
@@ -146,19 +145,21 @@ function AddNewBook() {
         // const added = await addBook({title, code});
         const data = {
             title: title,
+            title2: title.toLowerCase(),
             code: code,
+            code2: code.toLowerCase(),
             imageUrl: imageUrl,
             pdfUrl: pdfUrl,
             bookTypeId: selectType,
             floorId: selectFloor,
             categoryId: selectCategory,
             languageId: selectLanguage,
-            year: selectYear,
+            yearId: selectYear,
             status: "active",
             description: description,
         }
 
-        const added = await addData('books', data)
+        const added = await updateData('books', id, data)
         if (added) {
             setTitle("")
             setCode("")
@@ -172,7 +173,7 @@ function AddNewBook() {
             setImageUrl("")
             setPdfUrl("")
         }
-        toast.success('New book is added successfully!', {
+        toast.success('Book is updated successfully!', {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -480,7 +481,7 @@ function AddNewBook() {
                                     Save
                                 </LoadingButton>
                                 :
-                                <Button type='submit' variant="contained">Add New</Button>
+                                <Button type='submit' variant="contained">Update</Button>
                             }
                         </Grid>
                     </Grid>
@@ -490,4 +491,4 @@ function AddNewBook() {
     )
 }
 
-export default AddNewBook
+export default EditFormBook

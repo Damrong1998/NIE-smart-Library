@@ -9,7 +9,11 @@ import BookCategory from '@/app/components/admin/Elements/BookCategory';
 import BookLanguage from '@/app/components/admin/Elements/BookLanguage';
 import BookYear from '@/app/components/admin/Elements/BookYear';
 import BookFloor from '@/app/components/admin/Elements/BookFloor';
-import FileUpload from '../../media/upload/page';
+import { LoadingButton } from '@mui/lab';
+import { Save } from '@mui/icons-material';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import FileUpload from '../../media/elements/FileUpload';
 
 const styleModal = {
     position: 'absolute',
@@ -23,6 +27,7 @@ const styleModal = {
 };
 
 function AddNewBook() {
+    const [isLoading, setIsLoading] = useState(false)
     // Input state
     const [title, setTitle] = useState("")
     const [code, setCode] = useState("")
@@ -31,7 +36,6 @@ function AddNewBook() {
     // File Select
     const [imageUrl, setImageUrl] = useState("")
     const [pdfUrl, setPdfUrl] = useState("")
-
 
     // Select state
     const [selectType, setSelectType] = useState('');
@@ -83,11 +87,10 @@ function AddNewBook() {
         setOpen(true)
     }
 
-
     useEffect(() => {
         // Book Type 
         const getBookTypes = async (params) => {
-            const data = await getData('book_type')
+            const data = await getData('book_types')
             setTypes(data)
         }
         const getCategories = async (params) => {
@@ -114,7 +117,6 @@ function AddNewBook() {
         getFloors()
     }, [])
     
-
     // Select HandleChange
     const handleChangeType = (event) => {
         setSelectType(event.target.value);
@@ -140,23 +142,25 @@ function AddNewBook() {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true)
         // const added = await addBook({title, code});
         const data = {
             title: title,
+            title2: title.toLowerCase(),
             code: code,
+            code2: code.toLowerCase(),
             imageUrl: imageUrl,
             pdfUrl: pdfUrl,
             bookTypeId: selectType,
             floorId: selectFloor,
             categoryId: selectCategory,
             languageId: selectLanguage,
-            year: selectYear,
+            yearId: selectYear,
             status: "active",
             description: description,
         }
 
         const added = await addData('books', data)
-        
         if (added) {
             setTitle("")
             setCode("")
@@ -170,10 +174,35 @@ function AddNewBook() {
             setImageUrl("")
             setPdfUrl("")
         }
+        toast.success('New book is added successfully!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
+        setIsLoading(false)
     } 
 
     return (
         <Container maxWidth="lg" sx={{}}>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                // transition: Bounce,
+            />
             <Modal
                 keepMounted
                 open={open}
@@ -442,7 +471,19 @@ function AddNewBook() {
                     {/* Section 04 */}
                     <Grid container spacing={2} mt={1}>
                         <Grid item xs={12}>
-                            <Button type='submit' variant="contained">Add New</Button>
+                            {isLoading 
+                                ?
+                                <LoadingButton
+                                    loading
+                                    loadingPosition="start"
+                                    startIcon={<Save />}
+                                    variant="outlined"
+                                >
+                                    Save
+                                </LoadingButton>
+                                :
+                                <Button type='submit' variant="contained">Add New</Button>
+                            }
                         </Grid>
                     </Grid>
                 </form>

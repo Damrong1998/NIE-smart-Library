@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Grid, Skeleton, Typography } from '@mui/material'
 import Image from 'next/image'
 import { getDataById } from '@/app/db/function/CRUD'
+import Link from 'next/link'
 
 function BookSingle({data}) {
 
@@ -18,9 +19,9 @@ function BookSingle({data}) {
 
     useEffect(() => {
         const getRelatedData = async (params) => {
-            const dataType = await getDataById('book_type', typeId)
+            const dataType = await getDataById('book_types', typeId)
             const dataCategory = await getDataById('book_categories', categoryId)
-            // const dataFloor = await getDataById('book_floors', floorId)
+            const dataFloor = await getDataById('book_floors', floorId)
             const dataLanguage = await getDataById('book_languages', languageId)
         
             if (dataType) {
@@ -29,9 +30,9 @@ function BookSingle({data}) {
             if (dataCategory) {
                 setCategory(dataCategory)
             }
-            // if (dataFloor) {
-            //     setFloor(dataFloor)
-            // }
+            if (dataFloor) {
+                setFloor(dataFloor)
+            }
             if (dataLanguage) {
                 setLanguage(dataLanguage)
             }
@@ -93,14 +94,16 @@ function BookSingle({data}) {
                         }
                         
                     </Typography>
-                    <Button 
-                        type='button' 
-                        variant='outlined' 
-                        fullWidth
-                        disabled={data.pdfUrl? false: true}
-                    >
-                            View Pdf
-                    </Button>
+                    <Link href={data.pdfUrl?data.pdfUrl : "#"} target="_blank">
+                        <Button 
+                            type='button' 
+                            variant='outlined' 
+                            fullWidth
+                            disabled={data.pdfUrl? false: true}
+                        >
+                                View Pdf
+                        </Button>
+                    </Link>
                 </Grid>
             </Grid>
             

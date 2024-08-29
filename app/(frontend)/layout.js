@@ -12,11 +12,13 @@ export const metadata = {
 
 export default function HomeLayout({ children }) {
     return (
-        <html lang="en">
-            <body className={inter.className}>
-                <Header/>
-                {children}
-            </body>
-        </html>
+        // <html lang="en">
+        //     <body className={inter.className}>
+        <>
+            <Header/>
+            {children}
+        </>
+        //     </body>
+        // </html>
     );
 }

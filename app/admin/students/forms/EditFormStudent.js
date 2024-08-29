@@ -2,7 +2,7 @@
 import { Box, Button, Container, Grid, Modal, TextField, Typography } from '@mui/material'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import { addData } from '@/app/db/function/CRUD'
+import { addData, updateData } from '@/app/db/function/CRUD'
 import { Bounce, toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from '@mui/lab'
@@ -20,23 +20,25 @@ const styleModal = {
     // p: 4,
 };
 
-function NewStudent() {
+function EditFormStudent({id, data}) {
     const [isLoading, setIsLoading] = useState(false)
     // Input state
-    const [firstNameKh, setFirstNameKh] = useState("")
-    const [lastNameKh, setLastNameKh] = useState("")
-    const [firstNameEn, setFirstNameEn] = useState("")
-    const [lastNameEn, setLastNameEn] = useState("")
+    const [firstNameKh, setFirstNameKh] = useState(data.firstNameKh)
+    const [lastNameKh, setLastNameKh] = useState(data.lastNameKh)
+    const [firstNameEn, setFirstNameEn] = useState(data.firstNameEn)
+    const [lastNameEn, setLastNameEn] = useState(data.lastNameEn)
 
-    const [studentId, setStudentId] = useState("")
-    const [sex, setSex] = useState("")
-    const [subject, setSubject] = useState("")
-    const [studentClass, setStudentClass] = useState("")
-    const [email, setEmail] = useState("")
-    const [phone, setPhone] = useState("")
+    console.log("Data", data, firstNameEn, data.firstNameEn)
 
-    const [imageUrl, setImageUrl] = useState("")
-    const [description, setDescription] = useState("")
+    const [studentId, setStudentId] = useState(data.studentId)
+    const [sex, setSex] = useState(data.sex)
+    const [subject, setSubject] = useState(data.subject)
+    const [studentClass, setStudentClass] = useState(data.class)
+    const [email, setEmail] = useState(data.email)
+    const [phone, setPhone] = useState(data.phone)
+
+    const [imageUrl, setImageUrl] = useState(data.imageUrl)
+    const [description, setDescription] = useState(data.description)
 
     // Modal state
     const [open, setOpen] = useState(false);
@@ -61,6 +63,7 @@ function NewStudent() {
 
             studentId: studentId,
             studentId2: studentId.toLocaleLowerCase(),
+
             sex: sex,
             subject: subject,
             class: studentClass,
@@ -71,7 +74,7 @@ function NewStudent() {
             description: description,
         }
 
-        const added = await addData('students', data)
+        const added = await updateData('students', id, data)
         if (added) {
             setFirstNameKh("")
             setLastNameKh("")
@@ -86,7 +89,7 @@ function NewStudent() {
             setImageUrl("")
             setDescription("")
         }
-        toast.success('New Student is added successfully!', {
+        toast.success('Student is updated successfully!', {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -125,7 +128,7 @@ function NewStudent() {
                 </Box>
             </Modal>
 
-            <Typography variant='h5' pb={2} pt={2}>Add New Student</Typography>
+            <Typography variant='h5' pb={2} pt={2}>Update Student</Typography>
                 <form onSubmit={handleSubmit}>
                 <Box sx={{ bgcolor: "#fff", p: 5, mb: 2}} >
                     <Grid container spacing={2}>
@@ -295,7 +298,7 @@ function NewStudent() {
                                     Save
                                 </LoadingButton>
                                 :
-                                <Button type='submit' variant="contained">Add New</Button>
+                                <Button type='submit' variant="contained">Update</Button>
                             }
                         </Grid>
                     </Grid>
@@ -305,4 +308,4 @@ function NewStudent() {
     )
 }
 
-export default NewStudent
+export default EditFormStudent
