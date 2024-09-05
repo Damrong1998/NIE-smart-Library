@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { Box, Button, Container, Grid, Modal, TextField, Typography } from '@mui/material'
 import Image from 'next/image'
@@ -247,11 +248,10 @@ function NewStudent() {
                         <Grid item xs={12}>
                             <Typography mb={1}>Photo</Typography>
                             <Box mb={1} sx={{bgcolor: "#eeeeee", border: "1px solid gray", borderRadius: 2, width: 100, height: 140}}>
-                                <Image
+                                <img
                                     src={imageUrl? imageUrl: "/jpg_icon.png"}
-                                    width={100}
-                                    height={120}
-                                    alt="Picture of the author"
+                                    style={{width: "260px", height: 'auto'}}
+                                    alt='My Image'
                                 />
                             </Box>
                             <Button 

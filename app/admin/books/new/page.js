@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import React, { useEffect, useState } from 'react'
 import { addData, getData } from '@/app/db/function/CRUD';
@@ -414,11 +415,16 @@ function AddNewBook() {
                         <Grid item xs={12} md={6}>
                             <Typography mb={1}>Book Cover</Typography>
                             <Box mb={1} sx={{bgcolor: "#eeeeee", border: "1px solid gray", borderRadius: 2, width: 100, height: 140}}>
-                                <Image
+                                {/* <Image
                                     src={imageUrl? imageUrl: "/jpg_icon.png"}
                                     width={100}
                                     height={120}
                                     alt="Picture of the author"
+                                /> */}
+                                <img
+                                    src={imageUrl? imageUrl: "/jpg_icon.png"}
+                                    style={{width: "260px", height: 'auto'}}
+                                    alt='My Image'
                                 />
                             </Box>
                             <Button 
@@ -433,11 +439,16 @@ function AddNewBook() {
                         <Grid item xs={12} md={6}>
                             <Typography mb={1}>Upload Pdf</Typography>
                             <Box mb={1} sx={{bgcolor: "#eeeeee", border: "1px solid gray", borderRadius: 2, width: 100, height: 140}}>
-                                <Image
+                                {/* <Image
                                     src={pdfUrl? pdfUrl: "/pdf_icon.png"}
                                     width={100}
                                     height={120}
                                     alt="Picture of the author"
+                                /> */}
+                                <img
+                                    src={imageUrl? imageUrl: "/pdf_icon.png"}
+                                    style={{width: "260px", height: 'auto'}}
+                                    alt='My Image'
                                 />
                             </Box>
                             <Button 

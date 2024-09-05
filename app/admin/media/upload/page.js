@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import React, { useEffect, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
@@ -111,7 +112,11 @@ function FileUpload() {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Box textAlign={"center"}>
-                                    <Image src={url? url : "/jpg_icon.png"} width={100} height={100} alt='My Image'/>
+                                    <img
+                                        src={url?url: "/jpg_icon.png"} 
+                                        style={{width: "260px", height: 'auto'}}
+                                        alt='My Image'
+                                    />
                                     <Box>
                                         {isUploading?
                                             <Typography>Uploading...</Typography>

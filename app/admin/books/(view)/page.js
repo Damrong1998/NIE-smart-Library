@@ -16,7 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import { Save } from '@mui/icons-material';
 import { searchBookFirst, searchBookNext } from '@/app/db/function/searchBook';
 
-export default function ViewBook() {
+export default function ViewBook({params}) {
 
     const [books, setBooks] = useState([])
 

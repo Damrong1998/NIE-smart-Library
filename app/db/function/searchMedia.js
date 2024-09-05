@@ -82,4 +82,4 @@ const searchMediaNext = async ({search, lastDoc}) => {
 
 
 
-export { searchMediaFirst, searchMediaNext}
+export { searchMediaFirst, searchMediaNext }
