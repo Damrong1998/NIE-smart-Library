@@ -4,6 +4,8 @@ import EditFormStudent from '../../forms/EditFormStudent';
 import { getData, getDataById } from '@/app/db/function/CRUD';
 import { Typography } from '@mui/material';
 
+export const dynamic = 'force-static'
+
 function EditStudent({params}) {
     const {id} = params;
 
