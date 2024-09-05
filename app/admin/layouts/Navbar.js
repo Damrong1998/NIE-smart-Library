@@ -28,8 +28,7 @@ function Navbar() {
                     justifyContent={"space-between"} 
                 >
                     <Menu/>
-                    <Link href="https://nie-smart-library.web.app" replace>
-                    {/* <Link href={"/"}> */}
+                    <Link href={"/"}>
                         <Typography ml={2}>Home</Typography>
                     </Link>
                 </Box>

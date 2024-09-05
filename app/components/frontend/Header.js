@@ -45,12 +45,9 @@ function Header() {
                         </div>
                         
                         <div className={styles.menuList}>
-                            {/* <Link href="/">Home</Link>
+                            <Link href="/">Home</Link>
                             <Link href="/admin">Admin</Link>
-                            <Link href="/guests/new">Check In/Out</Link> */}
-                            <Link href="https://nie-smart-library.web.app">Home</Link>
-                            <Link href="https://nie-smart-library.web.app/admin/dashboard.html">Admin</Link>
-                            <Link href="https://nie-smart-library.web.app/guests/new.html">Check In/Out</Link>
+                            <Link href="/guests/new">Check In/Out</Link>
                             <Typography></Typography>
                             <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
                         </div>
