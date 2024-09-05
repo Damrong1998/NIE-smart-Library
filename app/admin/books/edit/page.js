@@ -1,11 +1,11 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { getData, getDataById } from '@/app/db/function/CRUD';
 import { Typography } from '@mui/material';
 import EditFormBook from '../forms/EditFormBook';
 import { useSearchParams } from 'next/navigation';
 
-function EditStudent() {
+function EditStudentElement() {
     // const {id} = params;
 
     const searchParams =  useSearchParams();
@@ -35,4 +35,12 @@ function EditStudent() {
     return <EditFormBook id={id} data={book} />;
 }
 
-export default EditStudent
+
+export default function EditStudent() {
+    return (
+      // You could have a loading skeleton as the `fallback` too
+      <Suspense>
+        <EditStudentElement />
+      </Suspense>
+    )
+  }
