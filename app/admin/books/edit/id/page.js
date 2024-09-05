@@ -4,10 +4,6 @@ import { getData, getDataById } from '@/app/db/function/CRUD';
 import { Typography } from '@mui/material';
 import EditFormBook from '../../forms/EditFormBook';
 
-export async function generateStaticParams() {
-    return []
-  }
-
 function EditStudent({params}) {
     const {id} = params;
 
