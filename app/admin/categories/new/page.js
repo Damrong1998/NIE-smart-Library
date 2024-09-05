@@ -8,7 +8,7 @@ import { LoadingButton } from '@mui/lab'
 import { Save } from '@mui/icons-material'
 
 
-function NewStudent() {
+function NewCategory() {
     const [isLoading, setIsLoading] = useState(false)
     // Input state
     const [name, setName] = useState("")
@@ -113,4 +113,4 @@ function NewStudent() {
     )
 }
 
-export default NewStudent
+export default NewCategory

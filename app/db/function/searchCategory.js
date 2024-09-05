@@ -1,4 +1,4 @@
-import { db } from './../firebase';
+import { db } from '../firebase';
 import { addDoc, and, collection, doc, getDocs, limit, or, orderBy, query, setDoc, startAfter, Timestamp, where } from 'firebase/firestore'
 
 // fetch data from books collection
