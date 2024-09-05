@@ -102,7 +102,15 @@ export default function ViewBook({params}) {
                                 <TableCell>{row.code}</TableCell>
                                 <TableCell align="right">
                                     <Button type='button' size='small' variant='contained' sx={{marginLeft: 2}} color="success" >View</Button>
-                                    <Link href={`/admin/books/edit/${row.id}`}>
+                                    <Link 
+                                        // href={`/admin/books/edit/${row.id}`}
+                                        href={{
+                                            pathname: "/admin/books/edit",
+                                            query: {
+                                                id: row.id,
+                                            }
+                                        }} 
+                                    >
                                         <Button type='button' size='small' variant='contained' sx={{marginLeft: 2}} color="primary" >Edit</Button>
                                     </Link>
                                     <Button type='button' size='small' variant='contained' sx={{marginLeft: 2}} color="error" >Trash</Button>

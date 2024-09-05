@@ -2,10 +2,15 @@
 import React, { useEffect, useState } from 'react'
 import { getData, getDataById } from '@/app/db/function/CRUD';
 import { Typography } from '@mui/material';
-import EditFormBook from '../../forms/EditFormBook';
+import EditFormBook from '../forms/EditFormBook';
+import { useSearchParams } from 'next/navigation';
 
-function EditStudent({params}) {
-    const {id} = params;
+function EditStudent() {
+    // const {id} = params;
+
+    const searchParams =  useSearchParams();
+
+    const id = searchParams.get("id")
 
     const [book, setBook] = useState("")
 
