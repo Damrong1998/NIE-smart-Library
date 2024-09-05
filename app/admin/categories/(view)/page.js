@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
-import React from 'react'
+import React, { Suspense } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { getCategory } from '@/app/db/function/searchCategory';
 
-export default function ViewStudent() {
+function ViewS() {
 
     //  const params =  useParams()
     const searchParams =  useSearchParams()
@@ -127,3 +127,12 @@ export default function ViewStudent() {
         </Container>
     );
 }
+
+export default function ViewStudent() {
+    return (
+      // You could have a loading skeleton as the `fallback` too
+      <Suspense>
+        <ViewS />
+      </Suspense>
+    )
+  }
